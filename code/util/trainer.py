@@ -29,7 +29,7 @@ def model_train(model,
     train_acc_ = 0.0
     
     # tqdm set
-    if (device == '0') or (device == 'cuda:0'):
+    if (device == 0) or (device == 'cuda:0'):
         for X, y in tqdm(data_loader):
             X, y = X.to(device), y.to(device)
 

@@ -16,7 +16,7 @@ def run():
     seed.seed_everything(21)
     
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    print(f'using {device} device \n')
+    print(f'using {device} device')
     
     ### Train / Validation set ###    
     train_set, val_set = dataset.load_CIFAR10(root='cifar10')
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     DOWNLOAD_CIFAR10 = True 
     
     if DOWNLOAD_CIFAR10:
-        dataset.download_cifar10()
+        dataset.download_CIFAR10()
 
     start_time = time.time()
     
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     
     end_time = time.time()
     
-    print('Elapsed time %s'%(end_time - start_time))
+    print('Elapsed time %s\n'%(end_time - start_time))
     
     
     
