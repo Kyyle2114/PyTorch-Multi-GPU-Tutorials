@@ -93,13 +93,15 @@ def model_evaluate(model,
         val_acc_ = 0.0
 
         for X, y in data_loader:
-            X, y = X.to(device), y.float().to(device)   
+            X, y = X.to(device), y.to(device)   
             
             output = model(X)
-            pred = output.max(dim=1)[1]
             
-            val_acc_ += torch.sum(pred.eq(y)).item()
-            val_loss_ += criterion(output, y).item() * X.size(0)
+            loss = criterion(output, y)
+            val_loss_ += loss.item() * X.size(0)
+            
+            preds = output.max(dim=1)[1]
+            val_acc_ += torch.sum(preds.eq(y)).item()
             
         val_acc = val_acc_ / len(data_loader.dataset)
         val_loss = val_loss_ / len(data_loader.dataset)  

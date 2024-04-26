@@ -76,7 +76,7 @@ def main(rank, opts):
     batch_sampler_train = torch.utils.data.BatchSampler(train_sampler, opts.batch_size, drop_last=True)
     train_loader = DataLoader(train_set, batch_sampler=batch_sampler_train, num_workers=opts.num_workers)
     
-    val_loader = DataLoader(val_set, batch_size=opts.batch_size, shuffle=False, num_workers=opts.num_workers/opts.ngpus_per_node)
+    val_loader = DataLoader(val_set, batch_size=opts.batch_size, shuffle=False)
 
     ### Model ###
     model = resnet50.ResNet50().cuda(local_gpu_id)
@@ -127,11 +127,11 @@ def main(rank, opts):
 
         print(f'epoch {epoch+1:02d}, loss: {train_loss:.5f}, accuracy: {train_acc:.5f}, val_loss: {val_loss:.5f}, val_accuracy: {val_acc:.5f} \n')
 
-    print('=== DONE === \n\n')    
+    print('=== DONE === \n')    
 
 if __name__ == '__main__':
     
-    DOWNLOAD_CIFAR10 = False
+    DOWNLOAD_CIFAR10 = True
     
     if DOWNLOAD_CIFAR10:
         dataset.download_CIFAR10()

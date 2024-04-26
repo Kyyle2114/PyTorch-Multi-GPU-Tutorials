@@ -63,11 +63,11 @@ def run():
 
         print(f'epoch {epoch+1:02d}, loss: {train_loss:.5f}, accuracy: {train_acc:.5f}, val_loss: {val_loss:.5f}, val_accuracy: {val_acc:.5f} \n')
     
-    print('=== DONE === \n\n')    
+    print('=== DONE === \n')    
     
 if __name__ == '__main__':
     
-    DOWNLOAD_CIFAR10 = False 
+    DOWNLOAD_CIFAR10 = True 
     
     if DOWNLOAD_CIFAR10:
         dataset.download_cifar10()
