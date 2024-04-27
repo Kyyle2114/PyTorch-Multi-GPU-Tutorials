@@ -1,5 +1,5 @@
 """
-Pytorch DDP Code Reference : https://mvje.tistory.com/141#recentComments
+Pytorch DDP Code Reference : https://mvje.tistory.com/141
 """
 
 import argparse
