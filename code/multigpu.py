@@ -106,26 +106,28 @@ def main(rank, opts):
             optimizer=optimizer, 
             device=local_gpu_id
         )
-                
-        val_loss, val_acc = trainer.model_evaluate(
-            model=model.module, 
-            data_loader=val_loader, 
-            criterion=criterion, 
-            device=torch.device(f"cuda:{local_gpu_id}")
-        )
         
         dist.all_reduce(train_loss, op=dist.ReduceOp.SUM)            
         train_loss = train_loss.item() / dist.get_world_size()
         
         dist.all_reduce(train_acc, op=dist.ReduceOp.SUM)
         train_acc = train_acc.item() / dist.get_world_size()
+        
+        if opts.rank == 0:
+            
+            val_loss, val_acc = trainer.model_evaluate(
+                model=model.module, 
+                data_loader=val_loader, 
+                criterion=criterion, 
+                device=torch.device(f"cuda:{local_gpu_id}")
+            )
+            
+            if val_loss < max_loss:
+                print(f'[INFO] val_loss has been improved from {max_loss:.5f} to {val_loss:.5f}. Save model.')
+                max_loss = val_loss
+                torch.save(model.state_dict(), 'Best_Model_DDP.pth')
 
-        if (val_loss < max_loss) and (opts.rank == 0):
-            print(f'[INFO] val_loss has been improved from {max_loss:.5f} to {val_loss:.5f}. Save model.')
-            max_loss = val_loss
-            torch.save(model.state_dict(), 'Best_Model_DDP.pth')
-
-        print(f'epoch {epoch+1:02d}, loss: {train_loss:.5f}, accuracy: {train_acc:.5f}, val_loss: {val_loss:.5f}, val_accuracy: {val_acc:.5f} \n')
+            print(f'epoch {epoch+1:02d}, loss: {train_loss:.5f}, accuracy: {train_acc:.5f}, val_loss: {val_loss:.5f}, val_accuracy: {val_acc:.5f} \n')
 
     print('=== DONE === \n')    
 
